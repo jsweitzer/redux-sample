@@ -1,0 +1,36 @@
+.container{
+  display: flex;
+  width: fit-content;
+}
+.cell{
+  display: flex;
+  background-color: lightgray;
+  flex-direction: column;
+  margin: 1em;
+  padding: 1em;
+  height: fit-content;
+  border: 1px solid grey;
+}
+.properties{
+  display: flex;
+  flex-direction: column;
+}
+.cellTitle{
+  padding: 0;
+  padding-bottom: .5em;
+  margin: 0;
+}
+.app-root{
+  display: flex;
+}
+.table{
+  border: 1px solid grey;
+  display: flex;
+  background-color: lightgray;
+  flex-direction: column;
+  margin-top: 1em;
+}
+.table-title{
+  margin-left: 1em;
+  margin-bottom: 0;
+}
