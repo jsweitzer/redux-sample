@@ -6,20 +6,16 @@ class LeadForm extends Component {
   constructor(props, context) {
     super(props, context);
     var proper = [];
-    for(var property in props){
-        if(props.hasOwnProperty(property)){
-            proper.push(property);
+    var sstate = {lead: {}};
+    for(var property in props.lead){
+        if(props.lead.hasOwnProperty(property)){
+            sstate.lead[property] = '';
         }
     }
-    const newState = proper.map((p, i) => {
-        return(
-            <div key={i} className='properties'>
-                <label htmlFor={p} onChange={this.onChange}>{p}</label>
-                <input name={p} onChange={this.onChange}/>
-            </div>
-        )
-    })
-    this.state = props;
+    for(var p in proper){
+
+    }
+    this.state = sstate;
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     }
@@ -30,7 +26,8 @@ class LeadForm extends Component {
     this.setState(newState);
   }
   onSubmit(){
-      this.props.addLead(this.state.lead);
+      var newLead = Object.assign({}, this.state.lead);
+      this.props.addLead(newLead);
   }
   renderProperties(lead){
     var props = [];
