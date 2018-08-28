@@ -36,7 +36,6 @@ class LeadForm extends Component {
             props.push(property);
         }
     }
-    var curState = this.state.lead;
     const elements = props.map((p, i) => {
         return(
             <div key={i} className='properties'>

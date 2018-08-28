@@ -29,6 +29,7 @@
   background-color: lightgray;
   flex-direction: column;
   margin-top: 1em;
+  margin-right: 1em;
 }
 .table-title{
   margin-left: 1em;

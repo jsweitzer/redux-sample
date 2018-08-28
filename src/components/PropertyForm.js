@@ -6,8 +6,8 @@ class PropertyForm extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-        name: 'default',
-        value: 'default'
+        name: '',
+        value: ''
     }
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
