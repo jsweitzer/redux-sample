@@ -1,13 +1,13 @@
 import Lead from "../components/Lead";
 
-const initialState = [{id: 1, fname: 'Adam'}]
+const initialState = [{}]
 
 export default function(state = initialState, action){
     switch(action.type){
-        case 'GET_LEADS':
+        case 'GET_PROPERTIES':
             return [...action.payload]
-        case 'ADD_LEAD':
-            return [...action.payload]
+        case 'ADD_PROPERTY':
+            return [...state, action.payload]
         default:
             return [...state]
     }

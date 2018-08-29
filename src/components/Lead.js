@@ -26,7 +26,7 @@ class Lead extends Component {
         return(
             <div key={i} className='properties'>
                 <label htmlFor={p} onChange={this.onChange}>{p}</label>
-                <input name={p} onChange={this.onChange} value={curState[p]}/>
+                <input name={p} onChange={this.onChange} value={curState[p] == undefined ? '' : curState[p]}/>
             </div>
         )
     })

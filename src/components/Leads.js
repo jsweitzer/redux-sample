@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Lead from './Lead';
+import {getLeads,getProperties} from '../actions/index';
 
 class Leads extends Component {
   constructor(props, context) {
     super(props, context);
     }
-
+    componentWillMount(){
+        this.props.getProperties();
+        this.props.getLeads();
+    }
   render(){
 
     if(this.props.Leads != undefined){
@@ -37,4 +41,4 @@ class Leads extends Component {
 const mapStateToProps = state => ({
     Leads: state.Leads
 })
-export default connect(mapStateToProps, {})(Leads)
+export default connect(mapStateToProps, {getLeads,getProperties})(Leads)

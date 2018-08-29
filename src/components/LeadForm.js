@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {addLead} from '../actions/index';
+import {addLead, getProperties} from '../actions/index';
 
 class LeadForm extends Component {
   constructor(props, context) {
@@ -19,6 +19,9 @@ class LeadForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     }
+    componentWillMount(){
+        this.props.getProperties();
+    }
   onChange(e){
     e.preventDefault;
     var newState = this.state.lead;
@@ -29,12 +32,10 @@ class LeadForm extends Component {
       var newLead = Object.assign({}, this.state.lead);
       this.props.addLead(newLead);
   }
-  renderProperties(lead){
+  renderProperties(){
     var props = [];
-    for(var property in lead){
-        if(lead.hasOwnProperty(property)){
-            props.push(property);
-        }
+    for(var property in this.props.properties){
+        props.push(this.props.properties[property].Name);
     }
     const elements = props.map((p, i) => {
         return(
@@ -59,7 +60,8 @@ class LeadForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    lead: state.Leads[0]
+    lead: state.Leads[0],
+    properties: state.Properties
 })
 
-export default connect(mapStateToProps, {addLead})(LeadForm)
+export default connect(mapStateToProps, {addLead,getProperties})(LeadForm)
