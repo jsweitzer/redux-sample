@@ -4,8 +4,8 @@ import rootReducer from './reducers'
 import { loadState, saveState } from './localStorage'
 
 const defaultState = { 
-    Leads: [{id: 1, fname: 'Adam', lname: 'Warlock', email: 'awarlock@marvel.com'}], 
-    Properties: [{id: 1, name: 'Shoe Size', value: '9'}]};
+    Leads: [{LeadID: 1, FirstName: 'Adam', LastName: 'Warlock', Email: 'awarlock@marvel.com'}], 
+    Properties: []};
 const initialState = defaultState;//loadState() || defaultState;
 
 const middleware = [thunk];

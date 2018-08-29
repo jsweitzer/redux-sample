@@ -35,7 +35,8 @@ class LeadForm extends Component {
   renderProperties(){
     var props = [];
     for(var property in this.props.properties){
-        props.push(this.props.properties[property].Name);
+        if(this.props.properties[property].Name != 'LeadID' && this.props.properties[property].Name != 'Lead_ExtraField')
+            props.push(this.props.properties[property].Name);
     }
     const elements = props.map((p, i) => {
         return(
