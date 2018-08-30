@@ -29,12 +29,8 @@ class LeadForm extends Component {
     constructor(props) {
         super(props);
 
-        
         var newState = props.lead == undefined ? {lead: {}} : {lead: Object.assign({}, props.lead)};
         this.state = newState;
-
-
-
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -44,6 +40,10 @@ class LeadForm extends Component {
         this.props.getProperties();
     }
 
+    componentWillReceiveProps(newProps){
+        var newState = newProps.lead == undefined ? {lead: {}} : {lead: Object.assign({}, newProps.lead)};
+        this.setState(newState);
+    }
 
     onChange(e){
         e.preventDefault;

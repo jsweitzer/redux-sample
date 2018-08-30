@@ -1,4 +1,4 @@
-const initialState = [{id: 1, fname: 'Adam'}]
+const initialState = []
 
 export default function(state = initialState, action){
     switch(action.type){
