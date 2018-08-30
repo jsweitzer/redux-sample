@@ -39,6 +39,7 @@ class LeadForm extends Component {
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
     }
 
     componentWillMount(){
@@ -56,6 +57,13 @@ class LeadForm extends Component {
     onSubmit(){
         var newLead = Object.assign({}, this.state.lead);
         this.props.addLead(newLead);
+    }
+
+    onKeyDown(e){
+        if(e.keyCode === 13){
+            var newLead = Object.assign({}, this.state.lead);
+            this.props.addLead(newLead);
+        }
     }
 
     renderProperties(){
@@ -78,7 +86,7 @@ class LeadForm extends Component {
         const properties = this.renderProperties()
         const classes = this.props.classes;
         return (
-            <Paper className={classes.root}>
+            <Paper className={classes.root} onKeyDown={this.onKeyDown}>
                 <Typography variant="headline" component="h3">
                     Add Lead
                 </Typography>

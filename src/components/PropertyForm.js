@@ -33,11 +33,18 @@ class PropertyForm extends Component {
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
     }
 
     onChange(e){
         e.preventDefault;
         this.setState({[e.target.name]: e.target.value});
+    }
+
+    onKeyDown(e){
+        if(e.keyCode === 13){
+            this.onSubmit();
+        }
     }
 
     onSubmit(){
@@ -52,7 +59,7 @@ class PropertyForm extends Component {
                     <Typography variant="headline" component="h3">
                         Add Property
                     </Typography>
-                    <TextField name='Name' id='Name' label='Name' margin="normal" onChange={this.onChange}/>
+                    <TextField name='Name' id='Name' label='Name' margin="normal" onKeyDown={this.onKeyDown} onChange={this.onChange}/>
                     <Button variant="contained" className={classes.button} onClick={this.onSubmit}>Save</Button>
                 </Paper>
             </div>

@@ -6,8 +6,10 @@ import PropertyForm from './PropertyForm'
 const App = () => (
   <div className='app-root'>
     <Leads/>
-    <PropertyForm/>
-    <LeadForm/>
+    <div className='column'>
+      <PropertyForm/>
+      <LeadForm/>
+    </div>
   </div>
 )
 
