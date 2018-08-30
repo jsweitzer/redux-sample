@@ -26,8 +26,8 @@ const styles = theme => ({
 
 class Leads extends Component {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.onLeadClick = this.onLeadClick.bind(this);
     }
 

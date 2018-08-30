@@ -26,8 +26,8 @@ const styles = theme => ({
   });
 
 class LeadForm extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         
         var newState = props.lead == undefined ? {lead: {}} : {lead: Object.assign({}, props.lead)};

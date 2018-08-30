@@ -27,15 +27,11 @@ const styles = theme => ({
   });
 
 class Lead extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.state = props;
         this.onChange = this.onChange.bind(this);
         this.renderProperties = this.renderProperties.bind(this);
-    }
-
-    componentWillReceiveProps(newProps){
-        this.setState(newProps);
     }
 
     onChange(e){
