@@ -1,5 +1,3 @@
-import Lead from "../components/Lead";
-
 const initialState = [{}]
 
 export default function(state = initialState, action){

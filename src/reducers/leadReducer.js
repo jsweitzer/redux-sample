@@ -1,5 +1,3 @@
-import Lead from "../components/Lead";
-
 const initialState = [{id: 1, fname: 'Adam'}]
 
 export default function(state = initialState, action){

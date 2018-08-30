@@ -1,5 +1,28 @@
+export function updateLead(lead){
+  return function(dispatch){
+    fetch("http://localhost:38643/api/Lead/updateLead", {
+      method: 'POST',
+      body: JSON.stringify(lead),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    })
+    .then(res => res.json())
+    .then(response => dispatch({
+      type: 'UPDATE_LEAD',
+      payload: response
+    }))
+  }
+}
+export function toggleEditing(leadId){
+  return function(dispatch){
+    dispatch({
+      type: 'TOGGLE_LEAD_EDITING',
+      payload: leadId
+    })
+  }
+}
 export function addProperty(property){
-  var x = 'test';
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/insertProperty?property="+property)
     .then(res => res.json())

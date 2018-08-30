@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {addLead, getProperties} from '../actions/index';
+import {addLead, getProperties,updateLead} from '../actions/index';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -29,11 +29,14 @@ class LeadForm extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = {lead: {}};
+        
+        this.state = props.lead == undefined ? {lead: {}} : {lead: Object.apply(props.lead)};
 
-        for(var property in props.lead){
-            if(props.lead.hasOwnProperty(property)){
-                this.state.lead[property] = '';
+        if(!props.isEditing){
+            for(var property in props.leads){
+                if(props.leads.hasOwnProperty(property)){
+                    this.state.lead[property] = '';
+                }
             }
         }
 
@@ -56,7 +59,11 @@ class LeadForm extends Component {
 
     onSubmit(){
         var newLead = Object.assign({}, this.state.lead);
-        this.props.addLead(newLead);
+        if(this.props.isEditing){
+            this.props.updateLead(newLead);
+        }else{
+            this.props.addLead(newLead);
+        }
     }
 
     onKeyDown(e){
@@ -75,7 +82,7 @@ class LeadForm extends Component {
         const elements = props.map((p, i) => {
             return(
                 <div key={i} className='properties'>
-                    <TextField name={p} id={p} label={p} margin="normal" onChange={this.onChange}/>
+                    <TextField name={p} id={p} label={p} margin="normal" onChange={this.onChange} value={this.props.lead == undefined ? '' : this.props.lead[p]}/>
                 </div>
             )
         })
@@ -98,8 +105,9 @@ class LeadForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    lead: state.Leads[0],
-    properties: state.Properties
+    leads: state.Leads[0],
+    properties: state.Properties,
+    Editing: state.Editing
 })
 
-export default connect(mapStateToProps, {addLead,getProperties})(withStyles(styles)(LeadForm))
+export default connect(mapStateToProps, {addLead,getProperties,updateLead})(withStyles(styles)(LeadForm))

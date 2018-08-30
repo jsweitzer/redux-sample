@@ -5,6 +5,8 @@ import {getLeads,getProperties} from '../actions/index';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import {toggleEditing} from '../actions/index';
+import LeadForm from'./LeadForm'
 
 const styles = theme => ({
     root: {
@@ -26,6 +28,7 @@ class Leads extends Component {
 
     constructor(props, context) {
         super(props, context);
+        this.onLeadClick = this.onLeadClick.bind(this);
     }
 
     componentWillMount(){
@@ -33,18 +36,34 @@ class Leads extends Component {
         this.props.getLeads();
     }
 
+    onLeadClick(leadId){
+        this.props.toggleEditing(leadId);
+    }
+
     render(){
         const classes = this.props.classes;
         if(this.props.Leads != undefined){
-            
+            console.log(JSON.stringify(this.props.Leads));
+            console.log(JSON.stringify(this.props.Editing));
             const leads = this.props.Leads.map((lead, i) => {
-                return (
-                    <Paper key={i} className={classes.sub} elevation={0}>
-                        <Lead 
-                            lead={lead}
-                        />
+                if(this.props.Editing.includes(lead.LeadID)){
+                    console.log('rendering as edit '+JSON.stringify(lead));
+                    return (
+                    <Paper key={lead.LeadID} className={classes.sub} elevation={0}>
+                        <LeadForm lead={lead} isEditing={true}/>
                     </Paper>
-                )
+                    )
+                }
+                else{
+                    console.log('rendering as read '+JSON.stringify(lead));
+                    return (
+                        <Paper key={lead.LeadID} onClick={() => {this.onLeadClick(lead.LeadID)}} className={classes.sub} elevation={0}>
+                            <Lead 
+                                lead={lead}
+                            />
+                        </Paper>
+                    )
+                }
             })
 
             return(
@@ -68,6 +87,7 @@ class Leads extends Component {
     }
 }
 const mapStateToProps = state => ({
-    Leads: state.Leads
+    Leads: state.Leads,
+    Editing: state.Editing
 })
-export default connect(mapStateToProps, {getLeads,getProperties})(withStyles(styles)(Leads))
+export default connect(mapStateToProps, {getLeads,getProperties,toggleEditing})(withStyles(styles)(Leads))
