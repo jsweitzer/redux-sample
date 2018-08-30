@@ -1,6 +1,29 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {addLead, getProperties} from '../actions/index';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+const styles = theme => ({
+    root: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+        height: 'fit-content',
+        margin: '1em',
+    },  
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },  
+    button: {
+        margin: theme.spacing.unit,
+    },
+  });
 
 class LeadForm extends Component {
     constructor(props, context) {
@@ -44,8 +67,7 @@ class LeadForm extends Component {
         const elements = props.map((p, i) => {
             return(
                 <div key={i} className='properties'>
-                    <label htmlFor={p} onChange={this.onChange}>{p}</label>
-                    <input name={p} onChange={this.onChange}/>
+                    <TextField name={p} id={p} label={p} margin="normal" onChange={this.onChange}/>
                 </div>
             )
         })
@@ -54,12 +76,15 @@ class LeadForm extends Component {
 
     render(){
         const properties = this.renderProperties()
+        const classes = this.props.classes;
         return (
-            <div className='cell'>
-                <h4 className='cellTitle'>Add Lead</h4>
+            <Paper className={classes.root}>
+                <Typography variant="headline" component="h3">
+                    Add Lead
+                </Typography>
                 {properties}
-                <button onClick={this.onSubmit}>Save</button>
-            </div>
+                <Button variant="contained" className={classes.button} onClick={this.onSubmit}>Save</Button>
+            </Paper>
         )
     }
 }
@@ -69,4 +94,4 @@ const mapStateToProps = state => ({
     properties: state.Properties
 })
 
-export default connect(mapStateToProps, {addLead,getProperties})(LeadForm)
+export default connect(mapStateToProps, {addLead,getProperties})(withStyles(styles)(LeadForm))

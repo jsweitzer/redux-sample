@@ -2,6 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Lead from './Lead';
 import {getLeads,getProperties} from '../actions/index';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
+const styles = theme => ({
+    root: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+        height: 'fit-content',
+        margin: '1em',
+    },
+    sub: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+        height: 'fit-content',
+    },    
+})
 
 class Leads extends Component {
 
@@ -15,31 +34,34 @@ class Leads extends Component {
     }
 
     render(){
+        const classes = this.props.classes;
         if(this.props.Leads != undefined){
             
             const leads = this.props.Leads.map((lead, i) => {
                 return (
-                    <div key={i} className='cell'>
+                    <Paper key={i} className={classes.sub} elevation={0}>
                         <Lead 
                             lead={lead}
                         />
-                    </div>
+                    </Paper>
                 )
             })
 
             return(
-                <div className='container  table'>
-                    <h4 className='table-title'>Leads</h4>
+                <Paper className={classes.root}>
+                    <Typography variant="headline">
+                        Leads
+                    </Typography>
                     {leads}
-                </div>
+                </Paper>
             )
 
         }else{
 
             return(
-                <div className='container'>
+                <Paper className='container'>
                     got none
-                </div>
+                </Paper>
             )
             
         }
@@ -48,4 +70,4 @@ class Leads extends Component {
 const mapStateToProps = state => ({
     Leads: state.Leads
 })
-export default connect(mapStateToProps, {getLeads,getProperties})(Leads)
+export default connect(mapStateToProps, {getLeads,getProperties})(withStyles(styles)(Leads))

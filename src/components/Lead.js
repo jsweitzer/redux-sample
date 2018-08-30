@@ -1,4 +1,30 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+
+const styles = theme => ({
+    root: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+        height: 'fit-content',
+    },  
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },
+    left: {
+        display: 'inline-flex',
+        marginRight: '1em'
+    },
+    right: {
+        display: 'inline-flex',
+        float: 'right'
+    },
+  });
 
 class Lead extends Component {
     constructor(props, context) {
@@ -18,6 +44,7 @@ class Lead extends Component {
     }
 
     renderProperties(lead){
+        const classes = this.props.classes;
         var props = [];
         for(var property in lead){
             if(lead.hasOwnProperty(property)){
@@ -29,9 +56,13 @@ class Lead extends Component {
 
         const elements = props.map((p, i) => {
             return(
-                <div key={i} className='properties'>
-                    <label htmlFor={p} onChange={this.onChange}>{p}</label>
-                    <input name={p} onChange={this.onChange} value={curState[p] == undefined ? '' : curState[p]}/>
+                <div key={i} className='property'>
+                    <Typography className={classes.left} variant="body2" align="left">
+                        {p}
+                    </Typography>
+                    <Typography className={classes.right} variant="body1" align="right">
+                        {curState[p]}
+                    </Typography>
                 </div>
             )
         })
@@ -41,12 +72,13 @@ class Lead extends Component {
     
     render(){
         const properties = this.renderProperties(this.props.lead)
+        const classes = this.props.classes;
         return (
-            <div className='properties'>
+            <Paper className={classes.root}>
                 {properties}
-            </div>
+            </Paper>
         )
     }
 }
 
-export default Lead
+export default withStyles(styles)(Lead)

@@ -2,6 +2,9 @@
   display: flex;
   width: fit-content;
 }
+.component{
+  margin: 1em;
+}
 .cell{
   display: flex;
   background-color: lightgray;
@@ -10,6 +13,9 @@
   padding: 1em;
   height: fit-content;
   border: 1px solid grey;
+}
+.leadForm{
+  height: fit-content;
 }
 .properties{
   display: flex;

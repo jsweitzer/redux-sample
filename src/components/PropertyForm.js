@@ -1,6 +1,29 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {addProperty} from '../actions/index';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+const styles = theme => ({
+    root: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+        height: 'fit-content',
+        margin: '1em',
+    },  
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },  
+    button: {
+        margin: theme.spacing.unit,
+    },
+  });
 
 class PropertyForm extends Component {
   constructor(props, context) {
@@ -22,17 +45,19 @@ class PropertyForm extends Component {
     }
 
     render(){
+        const classes = this.props.classes;
         return (
             <div className='container'>
-                <div className='cell'>
-                    <h4 className='cellTitle'>Add Property</h4>
-                    <label htmlFor='Name'>Name</label>
-                    <input name='Name' onChange={this.onChange} value={this.state.Name}/>
-                    <button onClick={this.onSubmit}>Save</button>
-                </div>
+                <Paper className={classes.root}>
+                    <Typography variant="headline" component="h3">
+                        Add Property
+                    </Typography>
+                    <TextField name='Name' id='Name' label='Name' margin="normal" onChange={this.onChange}/>
+                    <Button variant="contained" className={classes.button} onClick={this.onSubmit}>Save</Button>
+                </Paper>
             </div>
         )
     }
 }
 
-export default connect(null, {addProperty})(PropertyForm)
+export default connect(null, {addProperty})(withStyles(styles)(PropertyForm))
