@@ -30,15 +30,10 @@ class LeadForm extends Component {
         super(props, context);
 
         
-        this.state = props.lead == undefined ? {lead: {}} : {lead: Object.apply(props.lead)};
+        var newState = props.lead == undefined ? {lead: {}} : {lead: Object.assign({}, props.lead)};
+        this.state = newState;
 
-        if(!props.isEditing){
-            for(var property in props.leads){
-                if(props.leads.hasOwnProperty(property)){
-                    this.state.lead[property] = '';
-                }
-            }
-        }
+
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -52,14 +47,15 @@ class LeadForm extends Component {
 
     onChange(e){
         e.preventDefault;
-        var newState = this.state.lead;
-        newState[e.target.name] = e.target.value;
+        var newState = Object.assign({}, this.state);
+        newState.lead[e.target.name] = e.target.value;
         this.setState(newState);
     }
 
     onSubmit(){
         var newLead = Object.assign({}, this.state.lead);
         if(this.props.isEditing){
+            newLead.LeadID = this.props.lead.LeadID;
             this.props.updateLead(newLead);
         }else{
             this.props.addLead(newLead);
@@ -69,12 +65,18 @@ class LeadForm extends Component {
     onKeyDown(e){
         if(e.keyCode === 13){
             var newLead = Object.assign({}, this.state.lead);
-            this.props.addLead(newLead);
+            if(this.props.isEditing){
+                newLead.LeadID = this.props.lead.LeadID;
+                this.props.updateLead(newLead);
+            }else{
+                this.props.addLead(newLead);
+            }
         }
     }
 
     renderProperties(){
         var props = [];
+        console.log('STATE'+JSON.stringify(this.state));
         for(var property in this.props.properties){
             if(this.props.properties[property].Name != 'LeadID' && this.props.properties[property].Name != 'Lead_ExtraField')
                 props.push(this.props.properties[property].Name);
@@ -82,7 +84,7 @@ class LeadForm extends Component {
         const elements = props.map((p, i) => {
             return(
                 <div key={i} className='properties'>
-                    <TextField name={p} id={p} label={p} margin="normal" onChange={this.onChange} value={this.props.lead == undefined ? '' : this.props.lead[p]}/>
+                    <TextField name={p} id={p} label={p} margin="normal" onChange={this.onChange} value={this.state.lead == undefined ? '' : this.state.lead[p]}/>
                 </div>
             )
         })

@@ -1,6 +1,6 @@
 export function updateLead(lead){
   return function(dispatch){
-    fetch("http://localhost:38643/api/Lead/updateLead", {
+    fetch("http://localhost:38643/api/Lead/UpdateLead", {
       method: 'POST',
       body: JSON.stringify(lead),
       headers: {
@@ -10,7 +10,7 @@ export function updateLead(lead){
     .then(res => res.json())
     .then(response => dispatch({
       type: 'UPDATE_LEAD',
-      payload: response
+      payload: lead
     }))
   }
 }
