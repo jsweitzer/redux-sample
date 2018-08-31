@@ -55,6 +55,14 @@ export function updateFilter(payload){
     })
   }
 }
+export function applySort(payload){
+  return function(dispatch){
+    dispatch({
+      type: 'APPLY_SORT',
+      payload: payload
+    })
+  }
+}
 export function addProperty(property){
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/insertProperty?property="+property)

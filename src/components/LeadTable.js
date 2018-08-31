@@ -9,9 +9,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import {addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
+import {applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
 import Row from './Row';
 import FilterIcon from '@material-ui/icons/FilterList'
+import SwapVert from '@material-ui/icons/SwapVert'
 
 const styles = theme => ({
   root: {
@@ -64,6 +65,7 @@ class LeadTable extends Component{
         this.onLeadDelete = this.onLeadDelete.bind(this);
         this.onFilterClick = this.onFilterClick.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
+        this.onSortClick = this.onSortClick.bind(this);
     }
     onLeadDelete(lead){
         this.props.deleteLead(lead)
@@ -110,6 +112,9 @@ class LeadTable extends Component{
         payload.Value = e.target.value;
         this.props.updateFilter(payload)
     }
+    onSortClick(propName){
+        this.props.applySort(propName);
+    }
     render(){
 
                 const classes = this.props.classes;
@@ -132,14 +137,18 @@ class LeadTable extends Component{
                     if(prop.isEditing){
                         return(
                             <TableCell key={'h'+i}>
-                                {prop.Name}<FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                                {prop.Name}
+                                <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                                <SwapVert onClick={() => this.onSortClick(prop.Name)} className={classes.icon}/>
                                 <TextField className={classes.filter} name={prop.Name+'_filter'} id={prop.Name+'_filter'} label='Filter' margin="normal" onChange={this.onFilterChange} value={prop.filter == undefined ? '' : prop.filter}/>
                             </TableCell>
                         )
                     }else{
                         return(
                             <TableCell key={'h'+i}>
-                                {prop.Name}<FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                                {prop.Name}
+                                <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                                <SwapVert onClick={() => this.onSortClick(prop.Name)} className={classes.icon}/>
                             </TableCell>
                         )
                     }
@@ -157,6 +166,9 @@ class LeadTable extends Component{
                         console.log('return true')
                     }
                     return result;
+                })
+                filteredLeads.sort((a,b) => {
+                    
                 })
                 const dat = filteredLeads.map((data, i) => {
                     return (
@@ -193,4 +205,4 @@ const mapStateToProps = state => ({
     Properties: state.Properties
 })
 
-export default connect(mapStateToProps, {addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
+export default connect(mapStateToProps, {applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
