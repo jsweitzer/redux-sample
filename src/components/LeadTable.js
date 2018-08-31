@@ -113,7 +113,9 @@ class LeadTable extends Component{
         this.props.updateFilter(payload)
     }
     onSortClick(propName){
-        this.props.applySort(propName);
+        var sort = {};
+        sort.field = propName;
+        this.props.applySort(sort);
     }
     render(){
 
@@ -167,9 +169,19 @@ class LeadTable extends Component{
                     }
                     return result;
                 })
-                filteredLeads.sort((a,b) => {
-                    
-                })
+                if(this.props.Sort.field != '' && this.props.Sort.asc){
+                    filteredLeads.sort((a,b) => {
+                        if(a[this.props.Sort.field] < b[this.props.Sort.field]) return -1;
+                        if(a[this.props.Sort.field] > b[this.props.Sort.field]) return 1;
+                        return 0;
+                    })
+                }else if(this.props.Sort.field != '' && !this.props.Sort.asc){
+                    filteredLeads.sort((a,b) => {
+                        if(a[this.props.Sort.field] > b[this.props.Sort.field]) return -1;
+                        if(a[this.props.Sort.field] < b[this.props.Sort.field]) return 1;
+                        return 0;
+                    })
+                }
                 const dat = filteredLeads.map((data, i) => {
                     return (
                         <Row onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
@@ -202,7 +214,8 @@ LeadTable.propTypes = {
 const mapStateToProps = state => ({
     Data: state.Leads,
     Editing: state.Editing,
-    Properties: state.Properties
+    Properties: state.Properties,
+    Sort: state.Sort
 })
 
 export default connect(mapStateToProps, {applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
