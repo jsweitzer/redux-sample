@@ -54,7 +54,8 @@ class Leads extends Component {
                     </Paper>
                     )
                 }
-                else{
+                else
+                {
                     console.log('rendering as read '+JSON.stringify(lead));
                     return (
                         <Paper key={lead.LeadID} onClick={() => {this.onLeadClick(lead.LeadID)}} className={classes.sub} elevation={0}>

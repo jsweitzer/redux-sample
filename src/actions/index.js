@@ -1,3 +1,20 @@
+deleteLead
+export function deleteLead(lead){
+  return function(dispatch){
+    fetch("http://localhost:38643/api/Lead/DeleteLead", {
+      method: 'POST',
+      body: JSON.stringify(lead),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    })
+    .then(res => res.json())
+    .then(response => dispatch({
+      type: 'DELETE_LEAD',
+      payload: lead
+    }))
+  }
+}
 export function updateLead(lead){
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/UpdateLead", {

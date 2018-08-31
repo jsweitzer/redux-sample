@@ -15,6 +15,11 @@ export default function(state = initialState, action){
             return [...action.payload]
         case 'ADD_LEAD':
             return [...action.payload]
+        case 'DELETE_LEAD':
+            var newState = state.filter((v, i) => {
+                return v.LeadID != action.payload.LeadID;
+            })
+            return [...newState]
         default:
             return [...state]
     }
