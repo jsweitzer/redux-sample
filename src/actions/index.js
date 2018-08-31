@@ -39,6 +39,22 @@ export function toggleEditing(leadId){
     })
   }
 }
+export function toggleFilterEditing(propName){
+  return function(dispatch){
+    dispatch({
+      type: 'FILTER_EDITING',
+      payload: propName
+    })
+  }
+}
+export function updateFilter(payload){
+  return function(dispatch){
+    dispatch({
+      type: 'UPDATE_FILTER',
+      payload: payload
+    })
+  }
+}
 export function addProperty(property){
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/insertProperty?property="+property)

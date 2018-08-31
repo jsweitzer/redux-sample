@@ -9,8 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import {addLead, getProperties,updateLead,toggleEditing,deleteLead} from '../actions/index';
+import {addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
 import Row from './Row';
+import FilterIcon from '@material-ui/icons/FilterList'
 
 const styles = theme => ({
   root: {
@@ -21,6 +22,26 @@ const styles = theme => ({
   table: {
     minWidth: 700,
   },
+  icon: {
+    marginLeft: '.5em',
+    fontSize: 15,
+    cursor: 'pointer',
+  },
+  filter:{
+      position: 'absolute',
+      top: 0,
+      backgroundColor: 'white',
+      boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: 200,
+  },
+  activeIcon: {
+    marginLeft: '.5em',
+    fontSize: 17,
+    cursor: 'pointer',
+    color: 'red'
+  }
 });
 
 let id = 0;
@@ -41,6 +62,8 @@ class LeadTable extends Component{
         this.onRowClick = this.onRowClick.bind(this);
         this.onLeadUpdate = this.onLeadUpdate.bind(this);
         this.onLeadDelete = this.onLeadDelete.bind(this);
+        this.onFilterClick = this.onFilterClick.bind(this);
+        this.onFilterChange = this.onFilterChange.bind(this);
     }
     onLeadDelete(lead){
         this.props.deleteLead(lead)
@@ -78,6 +101,15 @@ class LeadTable extends Component{
         newState.lead[e.target.name] = e.target.value;
         this.setState(newState);
     }
+    onFilterClick(propName){
+        this.props.toggleFilterEditing(propName);
+    }
+    onFilterChange(e){
+        var payload = {};
+        payload.Name = e.target.name.split('_')[0];
+        payload.Value = e.target.value;
+        this.props.updateFilter(payload)
+    }
     render(){
 
                 const classes = this.props.classes;
@@ -97,13 +129,36 @@ class LeadTable extends Component{
                 console.log('PROPS'+JSON.stringify(this.props));
                 var props = [];
                 const headers = this.props.Properties.map((prop, i) => {
-                    return(
-                        <TableCell key={'h'+i}>
-                            {prop.Name}
-                        </TableCell>
-                    )
+                    if(prop.isEditing){
+                        return(
+                            <TableCell key={'h'+i}>
+                                {prop.Name}<FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                                <TextField className={classes.filter} name={prop.Name+'_filter'} id={prop.Name+'_filter'} label='Filter' margin="normal" onChange={this.onFilterChange} value={prop.filter == undefined ? '' : prop.filter}/>
+                            </TableCell>
+                        )
+                    }else{
+                        return(
+                            <TableCell key={'h'+i}>
+                                {prop.Name}<FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
+                            </TableCell>
+                        )
+                    }
                 })
-                const dat = this.props.Data.map((data, i) => {
+                var filteredLeads = this.props.Data.filter((v, i) => {
+                    var result = true;
+                    for(var i = 0; i < this.props.Properties.length; i++){
+                        var prop = this.props.Properties[i];
+                        console.log('prop.filter: ' + prop.filter)
+                        console.log('prop.filter: ' + prop.Name)
+                        if(prop.filter != undefined && prop.filter != '' && v[prop.Name] != undefined && !v[prop.Name].toString().toLowerCase().includes(prop.filter.toLowerCase())){
+                            result = false;
+                            console.log('return false')
+                        }
+                        console.log('return true')
+                    }
+                    return result;
+                })
+                const dat = filteredLeads.map((data, i) => {
                     return (
                         <Row onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
                     )
@@ -138,4 +193,4 @@ const mapStateToProps = state => ({
     Properties: state.Properties
 })
 
-export default connect(mapStateToProps, {addLead,getProperties,updateLead, toggleEditing,deleteLead})(withStyles(styles)(LeadTable));
+export default connect(mapStateToProps, {addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
