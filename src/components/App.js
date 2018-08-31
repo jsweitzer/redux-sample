@@ -6,9 +6,8 @@ import LeadTable from './LeadTable'
 
 const App = () => (
   <div className='app-root'>
-    <Leads/>
+  <LeadTable/>
     <div className='column'>
-      <LeadTable/>
       <PropertyForm/>
       <LeadForm/>
     </div>

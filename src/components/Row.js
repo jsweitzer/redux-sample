@@ -73,7 +73,7 @@ class Row extends Component {
         }else{
             return (
                 <TableCell key={data.LeadID+i}>
-                    <TextField inputProps={textFieldProps} className={classes.textField} name={data.LeadID+'_'+prop.Name} id={data.LeadID+'_'+prop.Name} onChange={this.onChange} margin="normal" value={this.state.Data[prop.Name] == undefined ? '' : this.state.Data[prop.Name]}/>
+                    <TextField  onKeyDown={(e) => this.props.onEditFormKeydown(this.state.Data,e)} inputProps={textFieldProps} className={classes.textField} name={data.LeadID+'_'+prop.Name} id={data.LeadID+'_'+prop.Name} onChange={this.onChange} margin="normal" value={this.state.Data[prop.Name] == undefined ? '' : this.state.Data[prop.Name]}/>
                 </TableCell>
                 )
             }

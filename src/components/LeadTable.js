@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import {applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
+import {getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
 import Row from './Row';
 import FilterIcon from '@material-ui/icons/FilterList'
 import SwapVert from '@material-ui/icons/SwapVert'
@@ -66,6 +66,10 @@ class LeadTable extends Component{
         this.onFilterClick = this.onFilterClick.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
         this.onSortClick = this.onSortClick.bind(this);
+        this.onEditFormKeydown = this.onEditFormKeydown.bind(this);
+    }
+    componentWillMount(){
+        this.props.getLeads();
     }
     onLeadDelete(lead){
         this.props.deleteLead(lead)
@@ -96,6 +100,11 @@ class LeadTable extends Component{
     }
     onLeadUpdate(lead){
         this.props.updateLead(lead);
+    }
+    onEditFormKeydown(lead, e){
+        if(e.keyCode == 13){
+            this.props.updateLead(lead);
+        }
     }
     onChange(e){
         e.preventDefault;
@@ -184,7 +193,7 @@ class LeadTable extends Component{
                 }
                 const dat = filteredLeads.map((data, i) => {
                     return (
-                        <Row onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
+                        <Row onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
                     )
                 })
 
@@ -192,7 +201,9 @@ return (
     <Paper className={classes.root}>
         <Table className={classes.table}>
             <TableHead>
-                {headers}
+                <TableRow>
+                    {headers}
+                </TableRow>
             </TableHead>
             <TableBody>
                 {dat}
@@ -218,4 +229,4 @@ const mapStateToProps = state => ({
     Sort: state.Sort
 })
 
-export default connect(mapStateToProps, {applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
+export default connect(mapStateToProps, {getLeads,applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
