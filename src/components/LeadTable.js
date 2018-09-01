@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import {getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
+import {applyGroup,getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
 import Row from './Row';
 import FilterIcon from '@material-ui/icons/FilterList'
 import SwapVert from '@material-ui/icons/SwapVert'
@@ -72,6 +72,8 @@ class LeadTable extends Component{
         this.onFilterChange = this.onFilterChange.bind(this);
         this.onSortClick = this.onSortClick.bind(this);
         this.onEditFormKeydown = this.onEditFormKeydown.bind(this);
+        this.onGroupClick = this.onGroupClick.bind(this);
+        this.groupBy = this.groupBy.bind(this);
     }
     componentWillMount(){
         this.props.getLeads();
@@ -131,6 +133,15 @@ class LeadTable extends Component{
         sort.field = propName;
         this.props.applySort(sort);
     }
+    onGroupClick(propName){
+        this.props.applyGroup(propName);
+    }
+    groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
     render(){
 
                 const classes = this.props.classes;
@@ -140,13 +151,7 @@ class LeadTable extends Component{
                         <div>
                         </div>
                     )
-                const rows = [
-                    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-                    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-                    createData('Eclair', 262, 16.0, 24, 6.0),
-                    createData('Cupcake', 305, 3.7, 67, 4.3),
-                    createData('Gingerbread', 356, 16.0, 49, 3.9),
-                ];
+                    
                 console.log('PROPS'+JSON.stringify(this.props));
                 var props = [];
                 const headers = this.props.Properties.map((prop, i) => {
@@ -168,7 +173,7 @@ class LeadTable extends Component{
                                     {prop.Name}
                                 </Typography>
                                 <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
-                                <GroupWork className={classes.icon}></GroupWork>
+                                <GroupWork onClick={() => this.onGroupClick(prop.Name)} className={classes.icon}></GroupWork>
                             </TableCell>
                         )
                     }
@@ -177,8 +182,6 @@ class LeadTable extends Component{
                     var result = true;
                     for(var i = 0; i < this.props.Properties.length; i++){
                         var prop = this.props.Properties[i];
-                        console.log('prop.filter: ' + prop.filter)
-                        console.log('prop.filter: ' + prop.Name)
                         if(prop.filter != undefined && prop.filter != '' && v[prop.Name] != undefined && !v[prop.Name].toString().toLowerCase().includes(prop.filter.toLowerCase())){
                             result = false;
                             console.log('return false')
@@ -200,6 +203,27 @@ class LeadTable extends Component{
                         return 0;
                     })
                 }
+                if(this.props.Group != undefined && this.props.Group.length > 0){
+                    var groups = this.groupBy(filteredLeads, this.props.Group);
+                    var groupedRows = [];
+                    for(var group in groups){
+                        var aggregateEntity = {};
+                        for(var prop in this.props.Properties){
+                            aggregateEntity[this.props.Properties[prop].Name] = '';
+                        }
+                        aggregateEntity[this.props.Group] = group;
+                        for(var i = 0; i < groups[group].length; i++){
+                            var entity = groups[group][i]
+                            for(var prop in entity){
+                                if(prop != this.props.Group)
+                                    aggregateEntity[prop] = aggregateEntity[prop] == '' ? entity[prop] : aggregateEntity[prop] + '|' + entity[prop]
+                            }
+                        }
+                        groupedRows.push(aggregateEntity)
+                    }
+                    filteredLeads = groupedRows;
+                }
+
                 const dat = filteredLeads.map((data, i) => {
                     return (
                         <Row onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
@@ -235,7 +259,8 @@ const mapStateToProps = state => ({
     Data: state.Leads,
     Editing: state.Editing,
     Properties: state.Properties,
-    Sort: state.Sort
+    Sort: state.Sort,
+    Group: state.Group
 })
 
-export default connect(mapStateToProps, {getLeads,applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
+export default connect(mapStateToProps, {applyGroup,getLeads,applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));

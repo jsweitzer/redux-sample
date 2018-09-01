@@ -99,6 +99,14 @@ export function addLead(lead){
     }))
   }
 }
+export function applyGroup(propName){
+  return function(dispatch){
+    dispatch({
+      type: 'APPLY_GROUP',
+      payload: propName
+    })
+  }
+}
 export function getLeads(){
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/Get")
