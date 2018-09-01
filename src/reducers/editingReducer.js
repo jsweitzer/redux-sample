@@ -4,7 +4,7 @@ export default function(state = initialState, action){
     switch(action.type){
         case 'UPDATE_LEAD':
             var newState = state.filter((v, i) => {
-                v !== action.payload.LeadID
+                v !== action.payload.ID
             })
         return [...newState]
         case 'TOGGLE_LEAD_EDITING':

@@ -60,7 +60,7 @@ class Row extends Component {
       var newLead = Object.assign({}, this.state.Data);
         for(var i = 0; i< this.props.Properties.length; i++)
         {
-            if(newLead.LeadID+'_'+this.props.Properties[i].Name == e.target.name)
+            if(newLead.ID+'_'+this.props.Properties[i].Name == e.target.name)
                 newLead[this.props.Properties[i].Name] = e.target.value;
         }
       this.setState({Data: newLead});
@@ -76,14 +76,14 @@ class Row extends Component {
         const cells = this.props.Properties.map((prop, i) => {
         if(!this.props.Editing || prop.Name == 'ID'){
             return (
-                <TableCell key={data.LeadID+i}>
+                <TableCell key={data.ID+i}>
                     {data[prop.Name]}
                 </TableCell>
             )
         }else{
             return (
-                <TableCell key={data.LeadID+i}>
-                    <TextField  onKeyDown={(e) => this.props.onEditFormKeydown(this.state.Data,e)} inputProps={textFieldProps} className={classes.textField} name={data.LeadID+'_'+prop.Name} id={data.LeadID+'_'+prop.Name} onChange={this.onChange} margin="normal" value={this.state.Data[prop.Name] == undefined ? '' : this.state.Data[prop.Name]}/>
+                <TableCell key={data.ID+i}>
+                    <TextField  onKeyDown={(e) => this.props.onEditFormKeydown(this.state.Data,e)} inputProps={textFieldProps} className={classes.textField} name={data.ID+'_'+prop.Name} id={data.ID+'_'+prop.Name} onChange={this.onChange} margin="normal" value={this.state.Data[prop.Name] == undefined ? '' : this.state.Data[prop.Name]}/>
                 </TableCell>
                 )
             }
@@ -109,7 +109,7 @@ class Row extends Component {
         }
         
         return (
-            <TableRow key={data.LeadID} className={classes.row} elevation={0}>
+            <TableRow key={data.ID} className={classes.row} elevation={0}>
                 {cells}
             </TableRow>
         )
