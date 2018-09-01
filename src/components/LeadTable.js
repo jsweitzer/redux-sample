@@ -13,6 +13,8 @@ import {getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,delet
 import Row from './Row';
 import FilterIcon from '@material-ui/icons/FilterList'
 import SwapVert from '@material-ui/icons/SwapVert'
+import GroupWork from '@material-ui/icons/GroupWork'
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -42,6 +44,9 @@ const styles = theme => ({
     fontSize: 17,
     cursor: 'pointer',
     color: 'red'
+  },
+  header: {
+      display: 'inline-block'
   }
 });
 
@@ -148,18 +153,22 @@ class LeadTable extends Component{
                     if(prop.isEditing){
                         return(
                             <TableCell key={'h'+i}>
-                                {prop.Name}
+                                <Typography className={classes.header} onClick={() => this.onSortClick(prop.Name)} variant='body2'>
+                                    {prop.Name}
+                                </Typography>
                                 <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
-                                <SwapVert onClick={() => this.onSortClick(prop.Name)} className={classes.icon}/>
                                 <TextField className={classes.filter} name={prop.Name+'_filter'} id={prop.Name+'_filter'} label='Filter' margin="normal" onChange={this.onFilterChange} value={prop.filter == undefined ? '' : prop.filter}/>
+                                <GroupWork className={classes.icon}></GroupWork>
                             </TableCell>
                         )
                     }else{
                         return(
                             <TableCell key={'h'+i}>
-                                {prop.Name}
+                                <Typography className={classes.header} onClick={() => this.onSortClick(prop.Name)} variant='body2'>
+                                    {prop.Name}
+                                </Typography>
                                 <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
-                                <SwapVert onClick={() => this.onSortClick(prop.Name)} className={classes.icon}/>
+                                <GroupWork className={classes.icon}></GroupWork>
                             </TableCell>
                         )
                     }
