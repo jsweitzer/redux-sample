@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import {applyGroup,getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter} from '../actions/index';
+import {applyGroup,getLeads,applySort,addLead, getProperties,updateLead,toggleEditing,deleteLead,toggleFilterEditing,updateFilter, setNumerics} from '../actions/index';
 import Row from './Row';
 import FilterIcon from '@material-ui/icons/FilterList'
 import SwapVert from '@material-ui/icons/SwapVert'
@@ -41,12 +41,13 @@ const styles = theme => ({
   },
   activeIcon: {
     marginLeft: '.5em',
-    fontSize: 17,
+    fontSize: 15,
     cursor: 'pointer',
     color: 'red'
   },
   header: {
-      display: 'inline-block'
+      display: 'inline-block',
+      cursor: 'pointer'
   }
 });
 
@@ -134,6 +135,18 @@ class LeadTable extends Component{
         this.props.applySort(sort);
     }
     onGroupClick(propName){
+        var nans = {};
+        for(var prop in this.props.Properties){
+            nans[this.props.Properties[prop].Name] = false;
+        }
+        for(var i = 0; i < this.props.Data.length; i++){
+            for(var prop in this.props.Properties){
+                if(isNaN(this.props.Data[i][this.props.Properties[prop].Name])){
+                    nans[this.props.Properties[prop].Name] = true;
+                }
+            }
+        }
+        this.props.setNumerics(nans);
         this.props.applyGroup(propName);
     }
     groupBy = function(xs, key) {
@@ -162,8 +175,8 @@ class LeadTable extends Component{
                                     {prop.Name}
                                 </Typography>
                                 <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
-                                <TextField className={classes.filter} name={prop.Name+'_filter'} id={prop.Name+'_filter'} label='Filter' margin="normal" onChange={this.onFilterChange} value={prop.filter == undefined ? '' : prop.filter}/>
-                                <GroupWork className={classes.icon}></GroupWork>
+                                <TextField onBlur={() => this.onFilterClick(prop.Name)} className={classes.filter} name={prop.Name+'_filter'} id={prop.Name+'_filter'} label='Filter' margin="normal" onChange={this.onFilterChange} value={prop.filter == undefined ? '' : prop.filter}/>
+                                <GroupWork className={classes.disabledIcon}></GroupWork>
                             </TableCell>
                         )
                     }else{
@@ -173,7 +186,7 @@ class LeadTable extends Component{
                                     {prop.Name}
                                 </Typography>
                                 <FilterIcon onClick={() => this.onFilterClick(prop.Name)} className={prop.filter != undefined && prop.filter.length != '' ? classes.activeIcon : classes.icon} />
-                                <GroupWork onClick={() => this.onGroupClick(prop.Name)} className={classes.icon}></GroupWork>
+                                <GroupWork onClick={() => this.onGroupClick(prop.Name)} className={prop.Name != undefined && prop.Name == this.props.Group ? classes.activeIcon : classes.icon}></GroupWork>
                             </TableCell>
                         )
                     }
@@ -209,14 +222,22 @@ class LeadTable extends Component{
                     for(var group in groups){
                         var aggregateEntity = {};
                         for(var prop in this.props.Properties){
-                            aggregateEntity[this.props.Properties[prop].Name] = '';
+                            if(this.props.Nans[prop]){
+                                aggregateEntity[this.props.Properties[prop].Name] = '';
+                            }else{
+                                aggregateEntity[this.props.Properties[prop].Name] = 0;
+                            }
+                                
                         }
                         aggregateEntity[this.props.Group] = group;
                         for(var i = 0; i < groups[group].length; i++){
                             var entity = groups[group][i]
                             for(var prop in entity){
-                                if(prop != this.props.Group)
+                                if(prop != this.props.Group && this.props.Nans[prop]){
                                     aggregateEntity[prop] = aggregateEntity[prop] == '' ? entity[prop] : aggregateEntity[prop] + '|' + entity[prop]
+                                }else if(prop != this.props.Group && !this.props.Nans[prop])
+                                    aggregateEntity[prop] = aggregateEntity[prop] += entity[prop]*1
+                                    
                             }
                         }
                         groupedRows.push(aggregateEntity)
@@ -226,7 +247,7 @@ class LeadTable extends Component{
 
                 const dat = filteredLeads.map((data, i) => {
                     return (
-                        <Row onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
+                        <Row isGrouped={this.props.Group.length > 0} onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
                     )
                 })
 
@@ -260,7 +281,8 @@ const mapStateToProps = state => ({
     Editing: state.Editing,
     Properties: state.Properties,
     Sort: state.Sort,
-    Group: state.Group
+    Group: state.Group.grouper,
+    Nans: state.Group.numerics
 })
 
-export default connect(mapStateToProps, {applyGroup,getLeads,applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));
+export default connect(mapStateToProps, {setNumerics,applyGroup,getLeads,applySort,addLead,getProperties,updateLead, toggleEditing,deleteLead,toggleFilterEditing,updateFilter})(withStyles(styles)(LeadTable));

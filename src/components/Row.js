@@ -36,6 +36,11 @@ const styles = theme => ({
         fontSize: 20,
         cursor: 'pointer'
       },
+    disabledIcon:{
+        margin: theme.spacing.untit,
+        fontSize: 20,
+        color: 'gray'      
+      },
   });
 
 class Row extends Component {
@@ -84,11 +89,17 @@ class Row extends Component {
                 <SaveIcon className={classes.icon} onClick={() => this.props.onLeadUpdate(this.state.Data)}/>
                 <DeleteIcon className={classes.icon} onClick={() => this.props.onLeadDelete(this.state.Data)}/>
             </TableCell>)
+        }else if(this.props.isGrouped){
+            cells.push(
+                <TableCell>
+                        <EditIcon className={classes.disabledIcon} />
+                        <DeleteIcon className={classes.disabledIcon} />
+                </TableCell>)
         }else{
             cells.push(
             <TableCell>
-                <EditIcon className={classes.icon} onClick={() => this.props.onRowClick(this.state.Data)}/>
-                <DeleteIcon className={classes.icon} onClick={() => this.props.onLeadDelete(this.state.Data)}/>
+                    <EditIcon className={classes.icon} onClick={() => this.props.onRowClick(this.state.Data)}/>
+                    <DeleteIcon className={classes.icon} onClick={() => this.props.onLeadDelete(this.state.Data)}/>
             </TableCell>)
         }
         

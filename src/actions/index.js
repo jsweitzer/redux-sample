@@ -1,4 +1,11 @@
-deleteLead
+export function setNumerics(numerics){
+  return function(dispatch){
+    dispatch({
+      type: 'SET_NUMERICS',
+      payload: numerics
+    })
+  }
+}
 export function deleteLead(lead){
   return function(dispatch){
     fetch("http://localhost:38643/api/Lead/DeleteLead", {
