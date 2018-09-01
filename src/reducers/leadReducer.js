@@ -4,7 +4,7 @@ export default function(state = initialState, action){
     switch(action.type){
         case 'UPDATE_LEAD':
             var newState = state.map((v, i) => {
-                if(v.LeadID == action.payload.LeadID){
+                if(v.ID == action.payload.ID){
                     return action.payload;
                 }else{
                     return v;
@@ -17,7 +17,7 @@ export default function(state = initialState, action){
             return [...action.payload]
         case 'DELETE_LEAD':
             var newState = state.filter((v, i) => {
-                return v.LeadID != action.payload.LeadID;
+                return v.ID != action.payload.ID;
             })
             return [...newState]
         default:

@@ -90,7 +90,7 @@ class LeadTable extends Component{
     onSubmit(){
         var newLead = Object.assign({}, this.state.lead);
         if(this.props.isEditing){
-            newLead.LeadID = this.props.lead.LeadID;
+            newLead.ID = this.props.lead.ID;
             this.props.updateLead(newLead);
         }else{
             this.props.addLead(newLead);
@@ -100,7 +100,7 @@ class LeadTable extends Component{
         if(e.keyCode === 13){
             var newLead = Object.assign({}, this.state.lead);
             if(this.props.isEditing){
-                newLead.LeadID = this.props.lead.LeadID;
+                newLead.ID = this.props.lead.ID;
                 this.props.updateLead(newLead);
             }else{
                 this.props.addLead(newLead);
@@ -146,7 +146,7 @@ class LeadTable extends Component{
         }
         for(var i = 0; i < this.props.Data.length; i++){
             for(var prop in this.props.Properties){
-                if(isNaN(this.props.Data[i][this.props.Properties[prop].Name]) || this.props.Properties[prop].Name == 'LeadID'){
+                if(isNaN(this.props.Data[i][this.props.Properties[prop].Name]) || this.props.Properties[prop].Name == 'ID'){
                     nans[this.props.Properties[prop].Name] = true;
                 }
             }
@@ -231,7 +231,7 @@ class LeadTable extends Component{
                         var aggregateEntity = {};
                         var aggregateCounts = {};
                         for(var prop in this.props.Properties){
-                            if(this.props.Nans[prop] || prop == 'LeadID'){
+                            if(this.props.Nans[prop] || prop == 'ID'){
                                 aggregateEntity[this.props.Properties[prop].Name] = '';
                                 aggregateCounts[this.props.Properties[prop].Name] = 0;
                             }else{
@@ -265,7 +265,7 @@ class LeadTable extends Component{
 
                 const dat = filteredLeads.map((data, i) => {
                     return (
-                        <Row isGrouped={this.props.Group.length > 0} onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.LeadID)} key={data.LeadID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.LeadID)}/>
+                        <Row isGrouped={this.props.Group.length > 0} onEditFormKeydown={this.onEditFormKeydown} onLeadDelete={this.onLeadDelete} onLeadUpdate={this.onLeadUpdate} onRowClick={() => this.onRowClick(data.ID)} key={data.ID} Data={data} Properties={this.props.Properties} Editing={this.props.Editing.includes(data.ID)}/>
                     )
                 })
 

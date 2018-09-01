@@ -53,9 +53,9 @@ class LeadForm extends Component {
     }
 
     onSubmit(){
-        var newLead = Object.assign({}, this.state.lead);
+        var newLead = Object.assign({}, this.state.entity);
         if(this.props.isEditing){
-            newLead.LeadID = this.props.lead.LeadID;
+            newLead.ID = this.props.lead.ID;
             this.props.updateLead(newLead);
         }else{
             this.props.addLead(newLead);
@@ -66,7 +66,7 @@ class LeadForm extends Component {
         if(e.keyCode === 13){
             var newLead = Object.assign({}, this.state.lead);
             if(this.props.isEditing){
-                newLead.LeadID = this.props.lead.LeadID;
+                newLead.ID = this.props.lead.ID;
                 this.props.updateLead(newLead);
             }else{
                 this.props.addLead(newLead);
@@ -78,7 +78,7 @@ class LeadForm extends Component {
         var props = [];
         console.log('STATE'+JSON.stringify(this.state));
         for(var property in this.props.properties){
-            if(this.props.properties[property].Name != 'LeadID' && this.props.properties[property].Name != 'Lead_ExtraField')
+            if(this.props.properties[property].Name != 'ID' && this.props.properties[property].Name != 'Lead_ExtraField')
                 props.push(this.props.properties[property].Name);
         }
         const elements = props.map((p, i) => {

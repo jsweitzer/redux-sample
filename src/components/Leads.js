@@ -36,8 +36,8 @@ class Leads extends Component {
         this.props.getLeads();
     }
 
-    onLeadClick(leadId){
-        this.props.toggleEditing(leadId);
+    onLeadClick(id){
+        this.props.toggleEditing(id);
     }
 
     render(){
@@ -46,10 +46,10 @@ class Leads extends Component {
             console.log(JSON.stringify(this.props.Leads));
             console.log(JSON.stringify(this.props.Editing));
             const leads = this.props.Leads.map((lead, i) => {
-                if(this.props.Editing.includes(lead.LeadID)){
+                if(this.props.Editing.includes(lead.ID)){
                     console.log('rendering as edit '+JSON.stringify(lead));
                     return (
-                    <Paper key={lead.LeadID} className={classes.sub} elevation={0}>
+                    <Paper key={lead.ID} className={classes.sub} elevation={0}>
                         <LeadForm lead={lead} isEditing={true}/>
                     </Paper>
                     )
@@ -58,7 +58,7 @@ class Leads extends Component {
                 {
                     console.log('rendering as read '+JSON.stringify(lead));
                     return (
-                        <Paper key={lead.LeadID} onClick={() => {this.onLeadClick(lead.LeadID)}} className={classes.sub} elevation={0}>
+                        <Paper key={lead.ID} onClick={() => {this.onLeadClick(lead.ID)}} className={classes.sub} elevation={0}>
                             <Lead 
                                 lead={lead}
                             />

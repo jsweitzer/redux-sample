@@ -74,7 +74,7 @@ class Row extends Component {
             margin: 'none',
         }
         const cells = this.props.Properties.map((prop, i) => {
-        if(!this.props.Editing || prop.Name == 'LeadID'){
+        if(!this.props.Editing || prop.Name == 'ID'){
             return (
                 <TableCell key={data.LeadID+i}>
                     {data[prop.Name]}
