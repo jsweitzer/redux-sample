@@ -222,7 +222,7 @@ class LeadTable extends Component{
                     for(var group in groups){
                         var aggregateEntity = {};
                         for(var prop in this.props.Properties){
-                            if(this.props.Nans[prop]){
+                            if(this.props.Nans[prop] || prop == 'LeadID'){
                                 aggregateEntity[this.props.Properties[prop].Name] = '';
                             }else{
                                 aggregateEntity[this.props.Properties[prop].Name] = 0;
@@ -233,11 +233,10 @@ class LeadTable extends Component{
                         for(var i = 0; i < groups[group].length; i++){
                             var entity = groups[group][i]
                             for(var prop in entity){
-                                if(prop != this.props.Group && this.props.Nans[prop]){
+                                if(prop != this.props.Group && this.props.Nans[prop] || prop == 'LeadID'){
                                     aggregateEntity[prop] = aggregateEntity[prop] == '' ? entity[prop] : aggregateEntity[prop] + '|' + entity[prop]
                                 }else if(prop != this.props.Group && !this.props.Nans[prop])
                                     aggregateEntity[prop] = aggregateEntity[prop] += entity[prop]*1
-                                    
                             }
                         }
                         groupedRows.push(aggregateEntity)
@@ -268,8 +267,6 @@ return (
     }
 }  
         
-
-
 LeadTable.propTypes = {
   classes: PropTypes.object.isRequired,
   Data: PropTypes.array.isRequired,
