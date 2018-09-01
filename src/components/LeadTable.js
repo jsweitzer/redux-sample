@@ -29,6 +29,7 @@ const styles = theme => ({
     marginLeft: '.5em',
     fontSize: 15,
     cursor: 'pointer',
+    color: 'white'
   },
   filter:{
       position: 'absolute',
@@ -47,8 +48,12 @@ const styles = theme => ({
   },
   header: {
       display: 'inline-block',
-      cursor: 'pointer'
-  }
+      cursor: 'pointer',
+      color: 'white'
+  },
+  headerRow: {
+      backgroundColor: '#2196f3'
+  },
 });
 
 let id = 0;
@@ -141,7 +146,7 @@ class LeadTable extends Component{
         }
         for(var i = 0; i < this.props.Data.length; i++){
             for(var prop in this.props.Properties){
-                if(isNaN(this.props.Data[i][this.props.Properties[prop].Name])){
+                if(isNaN(this.props.Data[i][this.props.Properties[prop].Name]) || this.props.Properties[prop].Name == 'LeadID'){
                     nans[this.props.Properties[prop].Name] = true;
                 }
             }
@@ -191,6 +196,9 @@ class LeadTable extends Component{
                         )
                     }
                 })
+                headers.push(
+                    <TableCell/>
+                )
                 var filteredLeads = this.props.Data.filter((v, i) => {
                     var result = true;
                     for(var i = 0; i < this.props.Properties.length; i++){
@@ -221,11 +229,14 @@ class LeadTable extends Component{
                     var groupedRows = [];
                     for(var group in groups){
                         var aggregateEntity = {};
+                        var aggregateCounts = {};
                         for(var prop in this.props.Properties){
                             if(this.props.Nans[prop] || prop == 'LeadID'){
                                 aggregateEntity[this.props.Properties[prop].Name] = '';
+                                aggregateCounts[this.props.Properties[prop].Name] = 0;
                             }else{
                                 aggregateEntity[this.props.Properties[prop].Name] = 0;
+                                aggregateCounts[this.props.Properties[prop].Name] = 0;
                             }
                                 
                         }
@@ -233,10 +244,18 @@ class LeadTable extends Component{
                         for(var i = 0; i < groups[group].length; i++){
                             var entity = groups[group][i]
                             for(var prop in entity){
-                                if(prop != this.props.Group && this.props.Nans[prop] || prop == 'LeadID'){
-                                    aggregateEntity[prop] = aggregateEntity[prop] == '' ? entity[prop] : aggregateEntity[prop] + '|' + entity[prop]
-                                }else if(prop != this.props.Group && !this.props.Nans[prop])
+                                if(prop != this.props.Group && aggregateCounts[prop] < 3 && this.props.Nans[prop]){
+                                    aggregateCounts[prop]++;
+                                    aggregateEntity[prop] = aggregateEntity[prop] == '' ? entity[prop] : aggregateEntity[prop] + ',' + entity[prop]
+                                }else if(prop != this.props.Group && this.props.Nans[prop] === false){
+                                    aggregateCounts[prop]++;
                                     aggregateEntity[prop] = aggregateEntity[prop] += entity[prop]*1
+                                }
+                            }
+                        }
+                        for(var count in aggregateCounts){
+                            if(aggregateCounts[count] === 3){
+                                aggregateEntity[count] += '...'
                             }
                         }
                         groupedRows.push(aggregateEntity)
@@ -253,7 +272,7 @@ class LeadTable extends Component{
 return (
     <Paper className={classes.root}>
         <Table className={classes.table}>
-            <TableHead>
+            <TableHead className={classes.headerRow}>
                 <TableRow>
                     {headers}
                 </TableRow>

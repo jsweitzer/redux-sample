@@ -40,7 +40,12 @@ const styles = theme => ({
         margin: theme.spacing.untit,
         fontSize: 20,
         color: 'gray'      
-      },
+      },  
+      row: {
+        '&:nth-of-type(odd)': {
+          backgroundColor: theme.palette.background.default,
+        },
+    }
   });
 
 class Row extends Component {
@@ -104,7 +109,7 @@ class Row extends Component {
         }
         
         return (
-            <TableRow key={data.LeadID} className={classes.sub} elevation={0}>
+            <TableRow key={data.LeadID} className={classes.row} elevation={0}>
                 {cells}
             </TableRow>
         )
